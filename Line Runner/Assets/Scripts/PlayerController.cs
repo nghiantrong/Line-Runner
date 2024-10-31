@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,9 +15,27 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            playerYPos = -playerYPos;
+            if (GameManager.instance.gameStarted)
+            {
+                PositionSwitch();
+            }
 
-            transform.position = new Vector3(transform.position.x, playerYPos, transform.position.z);
+        }
+    }
+
+    void PositionSwitch()
+    {
+        playerYPos = -playerYPos;
+
+        transform.position = new Vector3(transform.position.x,
+            playerYPos, transform.position.z);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Obstacle")
+        {
+            GameManager.instance.UpdateLives();
         }
     }
 }
