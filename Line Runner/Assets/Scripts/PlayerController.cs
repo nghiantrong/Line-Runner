@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     float playerYPos;
+
+    public GameObject playerParticle;
     void Start()
     {
         playerYPos = transform.position.y;
@@ -13,9 +15,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (GameManager.instance.gameStarted)
         {
-            if (GameManager.instance.gameStarted)
+            if (!playerParticle.activeInHierarchy)
+            {
+                playerParticle.SetActive(true);
+            }
+            if (Input.GetMouseButton(0))
             {
                 PositionSwitch();
             }
@@ -36,6 +42,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "Obstacle")
         {
             GameManager.instance.UpdateLives();
+            GameManager.instance.Shake();
         }
     }
 }

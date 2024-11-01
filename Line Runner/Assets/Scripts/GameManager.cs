@@ -15,17 +15,26 @@ public class GameManager : MonoBehaviour
     public int lives = 3;
     int score;
 
+    Vector3 orginalCamPos;
+
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI livesText;
 
     public GameObject menuUI;
     public GameObject gameUI;
     public GameObject spawner;
+    public GameObject backgroundParticle;
+
 
     private void Awake()
     {
         instance = this;
         livesText.text = "Lives: " + lives;
+    }
+
+    private void Start()
+    {
+        orginalCamPos = Camera.main.transform.position;
     }
 
     public void StartGame()
@@ -35,6 +44,8 @@ public class GameManager : MonoBehaviour
         menuUI.SetActive(false);
         gameUI.SetActive(true);
         spawner.SetActive(true);
+        backgroundParticle.SetActive(true);
+
     }
 
     public void GameOver()
@@ -73,5 +84,23 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Exitting...");
+    }
+
+    public void Shake()
+    {
+        StartCoroutine(CameraShake());
+    }
+
+    IEnumerator CameraShake()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            Vector2 randomPos = Random.insideUnitCircle * 0.5f;
+
+            Camera.main.transform.position = new Vector3(randomPos.x, randomPos.y, orginalCamPos.z);
+            yield return null;
+        }
+
+        Camera.main.transform.position = orginalCamPos;
     }
 }
